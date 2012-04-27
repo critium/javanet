@@ -1,0 +1,49 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2006.08.04.19.06.14;	author fdlcruz;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2006.02.03.16.26.16;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.framework.ifaces;
+
+import javax.servlet.http.HttpServletRequest;
+
+public abstract class SwitchBoardForm implements java.io.Serializable {
+	public SwitchBoardForm(){};
+	public abstract void init(HttpServletRequest request);
+}
+@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@d3 1
+a3 1
+public interface SwitchBoardForm extends java.io.Serializable {
+d5 3
+@
+

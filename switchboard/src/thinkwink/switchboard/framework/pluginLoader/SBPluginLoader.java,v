@@ -1,0 +1,167 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.08.04.19.06.12;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.framework.pluginLoader;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import thinkwink.switchboard.framework.ifaces.SwitchBoardBean;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardController;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardForm;
+
+public class SBPluginLoader {
+	private SWClassLoader sbCL;
+	private static SBPluginLoader sbPL;
+	private static final String BASE_URL = "file://C:/Documents and Settings/All Users/Documents/Dev/workspace/switchboard/bin";
+//	private static final String BASE_URL = System.getProperty("user.dir");
+	
+	private SBPluginLoader(){
+		
+	}
+	
+	public static SBPluginLoader getInstance(){
+		if(sbPL == null){
+			sbPL = new SBPluginLoader();
+			try {
+				sbPL.init();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return sbPL;
+	}
+	
+	public void init() throws MalformedURLException{
+		URL[] url = {new URL(BASE_URL)};
+//		this.getClass().getClassLoader()
+//		sbCL = new SWClassLoader(url, findPrimordialCL());
+		sbCL = new SWClassLoader(url, getClass().getClassLoader());
+	}
+	
+	public SwitchBoardForm loadForm(String name) {
+		Object o = findInstance(name);
+		
+		return (SwitchBoardForm) o;
+	}
+	
+	public SwitchBoardController loadController(String name) {
+		Object o = findInstance(name);
+		
+		return (SwitchBoardController) o;
+	}
+	
+	public SwitchBoardBean loadBean(String name){
+		Object o = findInstance(name);
+		
+		return (SwitchBoardBean) o;
+	}
+	
+	private Object findInstance(String name) {
+		SWClassLoader sbCL;
+		Class         c;
+		
+		try {
+			sbCL = getCL();
+			
+			c = sbCL.loadClass(name);
+			
+			if(c == null){
+				return null;
+			}
+			
+			return c.newInstance();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+//	private boolean loadClass(InputStream in, StringBuffer out, String password, File f) throws MalformedURLException, SecurityException, IllegalArgumentException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+//        SWClassLoader        sbCL;
+//        ByteArrayInputStream bais;
+//        ClassLoader          cl;
+//        ClassLoader          origCl;
+//        Class                c;        
+//        Method[]             ma;
+//        Method               m;
+//        Object               o;
+//        Object               p;
+//        Object               pd;
+//        Object               is;
+//        boolean              valid;
+//        
+//        
+//        cl      = getCL();        
+//        origCl  = Thread.currentThread().getContextClassLoader();
+//        valid   = false;
+//        
+//        Thread.currentThread().setContextClassLoader(cl);
+//        
+//        cl.loadClass(name);
+//        
+//        Thread.currentThread().setContextClassLoader(origCl);
+//        
+//        return valid;
+//    }
+	
+
+    private SWClassLoader getCL() throws MalformedURLException{
+        return sbCL;        
+    }
+    
+    private ClassLoader findPrimordialCL() {
+        ClassLoader cl = ClassLoader.getSystemClassLoader();
+                
+        return getParent(cl);
+    }
+    
+    private ClassLoader getParent(ClassLoader cl){
+        ClassLoader parent;
+        
+        if(cl.getParent() == null){
+            parent = cl;
+        } else {
+            parent = getParent(cl.getParent());
+        }
+        
+        return parent;
+    }
+}
+@

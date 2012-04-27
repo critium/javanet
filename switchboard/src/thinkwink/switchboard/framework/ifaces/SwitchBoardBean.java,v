@@ -1,0 +1,104 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2006.08.04.19.06.15;	author fdlcruz;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2006.02.03.16.26.15;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.framework.ifaces;
+
+import java.awt.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import thinkwink.switchboard.util.KVPair;
+
+public abstract class SwitchBoardBean implements java.io.Serializable {
+	private Map <Integer, String> nextPageMap;
+	private int                   nextPageKey = 0;
+	private KVPair                kvPair;
+	
+	public String getNextPage(){
+		return nextPageMap.get(nextPageKey);
+	}
+	
+	private Map <Integer, String> getPageMap(){
+		if(nextPageMap == null){
+			nextPageMap = new HashMap <Integer, String>();
+			
+			//this tells the controller that the controller has taken care of the response.
+			nextPageMap.put(0, "");
+			
+			//this tells the controller to go to the default error page.
+			nextPageMap.put(-1, "DefaultSwitchBoardError.jsp");
+		}
+		
+		return nextPageMap;
+	}
+	
+	public void setNextPage(int key){
+		if(getPageMap().containsKey(key)){
+			nextPageKey = key;
+		} else {
+			throw new NumberFormatException("Key is not valid");
+		}
+	}
+	
+	public void addNextPage(int key, String value) throws NumberFormatException {
+		
+		if(key == 0 || key == -1){
+			throw new NumberFormatException("Next page Key 0 and -1 are reserved key numbers");
+		}
+		
+		getPageMap().put(key, value);
+	}
+	
+	public boolean hasNextPage() {
+		if(nextPageKey == 0) return false;
+		return true;
+	}
+
+	public KVPair getKvPair() {
+		return kvPair;
+	}
+
+	private void setKvPair(KVPair kvPair) {
+		this.kvPair = kvPair;
+	}
+
+	public abstract void init(HttpServletRequest request, SwitchBoardForm swf);
+}
+@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@d7 2
+d63 2
+@
+

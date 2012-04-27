@@ -1,0 +1,112 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2009.07.02.22.02.09;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Issue number: NONE
+Obtained from: NONE
+Submitted by:  NONE
+Reviewed by:  NONE
+@
+text
+@package thinkwink.launcher;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ClassloaderTest {
+    public static void main(String[] args){
+        new ClassloaderTest();
+    }
+
+    public ClassloaderTest(){
+        ProgressMediatorIface pm = new ProgressMediatorIface(){
+            public void setText(String text) {
+            }
+        };
+        List<String> restrictedPackages = new ArrayList<String>();
+        List<String> allowedClasses = new ArrayList<String>();
+        List<String> restrictedClasses = new ArrayList<String>();
+        restrictedPackages.add("java.io");
+
+        LibClassFinder finder = new LibClassFinder(
+                pm,
+                restrictedPackages,
+                allowedClasses,
+                restrictedClasses);
+
+        //create new sandboxed thread
+        test1("java.io.InputStream", finder);
+        test1("HelloWorld", finder);
+    }
+
+    private void test1(String testClass, LibClassFinder finder) {
+        testme tm = new testme();
+        tm.classToRun = testClass;
+
+        Thread t = new Thread(tm);
+        t.setContextClassLoader(finder.getClassLoader());
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public class testme implements Runnable {
+        public double[] cashflows = null;
+        public String classToRun;
+
+
+        public void run(){
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
+            try {
+                Class c = cl.loadClass(classToRun);
+                Constructor cc = c.getConstructor(null);
+                Object o = cc.newInstance(null);
+                Method m = c.getMethod("initF", null);
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+}
+@

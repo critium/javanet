@@ -1,0 +1,258 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2005.02.24.03.40.29;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Issue number:
+Obtained from:
+Submitted by:  fdlcruz
+Reviewed by:
+CVS: ----------------------------------------------------------------------
+CVS: Issue number:
+CVS:   If this change addresses one or more issues,
+CVS:   then enter the issue number(s) here.
+CVS: Obtained from:
+CVS:   If this change has been taken from another system,
+CVS:   then name the system in this line, otherwise delete it.
+CVS: Submitted by:
+CVS:   If this code has been contributed to the project by someone else; i.e.,
+CVS:   they sent us a patch or a set of diffs, then include their name/email
+CVS:   address here. If this is your work then delete this line.
+CVS: Reviewed by:
+CVS:   If we are doing pre-commit code reviews and someone else has
+CVS:   reviewed your changes, include their name(s) here.
+CVS:   If you have not had it reviewed then delete this line.
+@
+text
+@<project name="Generic launcher" default="compile" basedir=".">
+
+
+  <property environment="env"/>
+  <property name="launcher.name" value="Thinkwink.Launcher"/>
+   
+  <!-- Deploy options set from environment variables -->
+  <property name="deploy.env" value="${env.DEPLOY_ENV}"/>
+  <property name="deploy.contentdir" value="${env.DEPLOY_CONTENTDIR}"/>
+
+  <!--  Java compiler options  --> 
+  <property name="compile.debug" value="true" /> 
+  <property name="compile.deprecation" value="false" /> 
+  <property name="compile.optimize" value="true" /> 
+
+  <!--  The source directory for Java compilations related to this launcher   --> 
+  <property name="launcher.src" value="${basedir}/src" /> 
+  <property name="launcher.testsrc" value="${basedir}/testsrc" />
+
+  <!-- Build properties -->
+  <property name="launcher.export" value="${basedir}/export" /> 
+  <property name="launcher.target" value="${basedir}/target" />
+
+  <!--  ========== Derived Properties ========================================   --> 
+  <!--  The target directory for building the unpacked web application   --> 
+  <!--  The class path used for compiling this library   --> 
+  <!-- Library properties -->
+  <property name="launcher.libs" value="${basedir}/export/lib" />
+
+  <path id="classpath">
+    <fileset dir="${launcher.libs}">
+      <include name="**/*.jar"/>
+      <include name="**/*.zip"/>
+    </fileset>
+    <pathelement path="${compile.classpath}" /> 
+  </path>
+
+
+  <!--  ========== Executable Targets ========================================  --> 
+  <!-- 
+        The "clean" task deletes any created directories that have resulted
+        from running any of the other targets in this script.
+  --> 
+  <target name="clean" description="Clean build an distribution directories">
+    <echo message="Processing clean for launcher" /> 
+    <delete includeEmptyDirs="true" failonerror="false"> 
+      <fileset dir="${basedir}">
+        <include name="bin/**"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <!-- 
+        The "init" target evaluates "available" expressions as necessary
+        to modify the behavior of this script.
+  --> 
+  <target name="init">
+    <echo message="Processing init for launcher" /> 
+    <!--  Do we need to copy dependent libraries? --> 
+    <available property="copy.libs" file="${launcher.libs}" /> 
+    <!--  Do we need to compile the Java sources for this web application? --> 
+    <available property="launcher.compile" file="${launcher.src}" /> 
+  </target>
+
+
+  <!-- 
+        The "prepare" target creates a directory structure in the build target
+        area for the unpacked files associated with this web application
+  --> 
+  <target name="prepare" depends="init" description="Prepare target directory">
+    <echo message="Processing prepare for launcher" /> 
+    <mkdir dir="${basedir}" />  
+    <mkdir dir="${basedir}/export" /> 
+    <mkdir dir="${basedir}/lib" />
+    <mkdir dir="${basedir}/splash" />
+  </target>
+
+  <!-- 
+        The "compile" target compiles the Java source code of your web
+        application, if and only if the specified source directory
+        actually exists.
+  --> 
+  <target name="compile" depends="prepare" if="launcher.compile" description="Compile Java sources">
+    <echo message="Processing compile for launcher" /> 
+    <javac srcdir="${launcher.src}" destdir="${basedir}/bin" debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
+      <classpath refid="classpath" /> 
+    </javac>
+  	<!--
+    <javac srcdir="${launcher.testsrc}" destdir="${launcher.export}/bin" debug="${compile.debug}" deprecation="${compile.deprecation}" optimize="${compile.optimize}">
+      <classpath refid="classpath" /> 
+    </javac>
+    <antcall target="property-substitution"/>
+    -->
+  </target>
+
+  <!-- 
+        The "compile" target compiles the Java source code of your web
+        application, if and only if the specified source directory
+        actually exists.
+  --> 
+  <target name="export" depends="compile" if="launcher.compile" description="Compile Java sources and make an export jar">
+    <jar destfile="${launcher.export}/launcher.jar" manifest="${launcher.export}/META-INF/MANIFEST.MF" basedir="bin"/>
+  </target>
+
+  <!--
+         Run JUnit tests.
+  -->
+  <target name="test" depends="compile" description="Perform JUnit tests">
+    <echo message="Processing test for ${launcher.name}" />
+    <junit printsummary="yes" fork="yes" haltonfailure="yes" >
+      <classpath>
+        <path refid="classpath"/>
+        <pathelement location="${launcher.export}/classes"/>
+      </classpath>
+      <formatter type="xml"/>
+      <batchtest todir="${launcher.target}/test-reports">
+		<fileset dir="${launcher.testsrc}">
+		  <include name="**/*Test*.java"/>
+		  <exclude name="**/AllTests.java"/>
+		</fileset>
+      </batchtest>
+    </junit>
+  </target>
+	
+  <target name="simple-copy" description="Starting simple copy into ${deploy.contentdir}">
+    <echo message="copy into ${deploy.contentdir} as ${deploy.env}"/>
+    <antcall target="property-substitution"/>
+
+    <exec command="chmod -R 0700 ${deploy.contentdir}"/>    
+<!-- If we move to ant 1.6, we can use this instead of the exec above
+    <chmod perm="0700">
+      <fileset dir="${deploy.contentdir}"/>
+    </chmod>
+-->
+    <delete includeEmptyDirs="false" failonerror="false"> 
+      <fileset dir="${deploy.contentdir}">
+        <include name="${launcher.name}/**"/>
+        <include name="WEB-INF/**"/>
+      </fileset>
+    </delete>
+    <copy todir="${deploy.contentdir}/${launcher.name}">
+        <fileset dir="${launcher.name}">
+            <include name="**"/>
+        </fileset>
+    </copy>  
+    <copy todir="${deploy.contentdir}/WEB-INF">
+        <fileset dir="${launcher.export}">
+        </fileset>
+    </copy> 
+    <exec command="chmod -R 0500 ${deploy.contentdir}"/>    
+    <exec executable="sh">
+      <arg line='-c "find ${deploy.contentdir} -type f -print | xargs -i chmod 0400 &quot;{}&quot;"'/>
+    </exec>
+<!-- If we move to ant 1.6, we can use this instead of the execs above
+    <chmod perm="0400">
+      <fileset dir="${deploy.contentdir}">
+		<type type="file"/>
+      </fileset>
+    </chmod>
+    <chmod perm="0500">
+      <fileset dir="${deploy.contentdir}">
+        <type type="dir"/>
+      </fileset>
+    </chmod>
+-->
+  </target>
+
+
+  <!--
+       Create javadoc.
+  -->
+  <target name="javadoc" depends="prepare" description="Create the javadoc">
+    <echo message="Processing javadoc for ${launcher.name}" />
+	<javadoc 
+           destdir="${launcher.target}/docs/api"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="Thinkwink launcher API"
+           useexternalfile="yes">
+      <packageset dir="src">
+        <include name="thinkwink/**"/>
+      </packageset>
+      <classpath refid="classpath" /> 
+    </javadoc>
+  </target>
+  
+  
+  <!--
+       Run doccheck.
+  -->
+  <target name="doccheck" depends="prepare" description="Check for javadoc">
+    <echo message="Processing doccheck for launcher ${launcher.name}" />
+	<javadoc 
+           destdir="${launcher.target}/docs/doccheck"
+           author="true"
+           version="true"
+           useexternalfile="yes">
+       <doclet name="com.sun.tools.doclets.doccheck.DocCheck"
+             path="lib/doccheck.jar">
+         <param name="-execDepth" value="4"/>
+       </doclet>
+       <packageset dir="src">
+         <include name="com/**"/>
+       </packageset>
+       <classpath refid="classpath" /> 
+    </javadoc>
+  </target>
+
+  <!--
+       Update code from CVS.
+  -->
+  <target name="checkout" description="Update package from CVS">
+    <cvs cvsroot="${cvs.repository}" cvsRsh="ssh" package="${cvs.package}" dest=".."/>
+  </target>
+	
+</project>
+@

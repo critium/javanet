@@ -1,0 +1,65 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2006.08.04.19.06.14;	author fdlcruz;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2006.02.03.17.00.34;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@This is a working copy.  Enjoy!
+@
+text
+@<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE web-app PUBLIC '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN' 'http://java.sun.com/dtd/web-app_2_3.dtd'>
+<web-app>
+  <servlet>
+    <servlet-name>swb</servlet-name>
+    <servlet-class>thinkwink.switchboard.servlet.HeadSwitchBoardController</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>swb</servlet-name>
+    <url-pattern>/swb/*</url-pattern>
+  </servlet-mapping>
+
+  <welcome-file-list>
+    <welcome-file>
+      index.jsp
+    </welcome-file>
+  </welcome-file-list>
+
+  <taglib>
+    <taglib-uri>/WEB-INF/swb</taglib-uri>
+    <taglib-location>/WEB-INF/switchboard.tld</taglib-location>
+  </taglib>
+</web-app>
+ 
+@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@d21 1
+a21 1
+    <taglib-uri>/switchboard</taglib-uri>
+@
+

@@ -1,0 +1,41 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.08.04.19.06.16;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.sample.bean;
+
+import javax.servlet.http.HttpServletRequest;
+
+import thinkwink.switchboard.framework.ifaces.SwitchBoardBean;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardForm;
+
+public class IndexBean extends SwitchBoardBean {	
+	public String toString(){
+		return "Index Bean 0";
+	}
+
+	@@Override
+	public void init(HttpServletRequest request, SwitchBoardForm swf) {
+		// TODO Auto-generated method stub
+		
+	}
+}
+@

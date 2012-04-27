@@ -1,0 +1,117 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2006.08.04.19.06.15;	author fdlcruz;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2006.02.03.16.26.18;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.framework.impl;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import thinkwink.switchboard.framework.factories.BeanFactory;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardBean;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardController;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardForm;
+import thinkwink.switchboard.util.KVPair;
+
+public class DefaultSwitchBoardController extends SwitchBoardController {
+	public static Log log = LogFactory.getLog(DefaultSwitchBoardController.class);
+	
+	public void init(HttpServletRequest request, HttpServletResponse response, SwitchBoardForm swf, SwitchBoardBean swb) {
+		swb.setNextPage(0);
+		
+		try {
+			response.setContentType("text/plain; charset=us-ascii");
+			writeVars(response.getWriter(), swb);
+			response.flushBuffer();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void writeVars(PrintWriter out, SwitchBoardBean swb){
+		KVPair          kvPair;
+		Set    <String> keySet;
+		String[]        value;
+		
+		log.debug("Displaying Bean Values");
+		
+		if(swb instanceof DefaultSwitchBoardBean){
+			DefaultSwitchBoardBean dswb = (DefaultSwitchBoardBean) swb;
+			
+			kvPair = dswb.getKVPair();
+			
+			keySet = kvPair.keySet();
+			
+			for(String key: keySet){
+				value = kvPair.get(key);
+				
+				log.debug("key: " + key);
+				
+				for(int i=0; i<value.length; i++){
+					log.debug("\tvalue:" + value[i]);
+				}
+			}
+		}
+		
+		out.flush();
+	}
+}
+@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@d6 2
+d12 4
+d21 4
+a24 3
+public class DefaultSwitchBoardController implements SwitchBoardController {
+
+	public DefaultSwitchBoardController(HttpServletRequest request, HttpServletResponse response, SwitchBoardForm swf, SwitchBoardBean swb) {
+d42 1
+a42 1
+		out.println("Displaying Bean Values");
+d54 1
+a54 1
+				out.println("key: " + key);
+d57 1
+a57 1
+					out.println("\tvalue:" + value[i]);
+@
+

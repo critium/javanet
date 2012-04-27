@@ -1,0 +1,25 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.02.03.17.01.32;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@<%@@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
+<%@@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
+<%@@ taglib prefix="swb" uri="/WEB-INF/swb" %>   @

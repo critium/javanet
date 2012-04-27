@@ -1,0 +1,297 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2005.02.24.02.44.47;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Issue number:
+Obtained from:
+Submitted by:  fdlcruz
+Reviewed by:
+CVS: ----------------------------------------------------------------------
+CVS: Issue number:
+CVS:   If this change addresses one or more issues,
+CVS:   then enter the issue number(s) here.
+CVS: Obtained from:
+CVS:   If this change has been taken from another system,
+CVS:   then name the system in this line, otherwise delete it.
+CVS: Submitted by:
+CVS:   If this code has been contributed to the project by someone else; i.e.,
+CVS:   they sent us a patch or a set of diffs, then include their name/email
+CVS:   address here. If this is your work then delete this line.
+CVS: Reviewed by:
+CVS:   If we are doing pre-commit code reviews and someone else has
+CVS:   reviewed your changes, include their name(s) here.
+CVS:   If you have not had it reviewed then delete this line.
+@
+text
+@/*
+ * Created on Nov 12, 2004
+ *
+ * To change the template for this generated file go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ */
+package thinkwink.launcher;
+
+import java.awt.Color;
+import java.util.Enumeration;
+import java.util.MissingResourceException;
+import java.util.Properties;
+import java.util.PropertyResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * @@author Pule
+ *
+ * To change the template for this generated type comment go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ */
+public class LauncherProperties {
+
+	private Properties properties;
+	
+	private String SPLASHMODE = "splashmode";
+	private String SPLASHPAGE = "splashpage";
+	private String SPLASHTIME = "splashtime";
+	private String RUNMODE    = "runmode";
+	private String LOG        = "log";
+	private String BORDER     = "border";
+	private String BACKGROUND = "background";
+	private String FOREGROUND = "foreground";
+	
+	/**
+	 * IMG splash mode
+	 */
+	public String IMG  = "IMG";
+	/**
+	 * HTML Splash mode
+	 */
+	public String HTML = "HTML";
+	/**
+	 * Parallel Run mode
+	 */
+	public String PARALLEL = "PARALLEL";
+	/**
+	 * Serial Run Mode
+	 */
+	public String SERIAL = "SERIAL";	
+	
+
+	public LauncherProperties(){
+		loadProperties();
+	}
+	
+	private void loadProperties(){
+		Properties props = new Properties();
+		
+		try{
+		
+			PropertyResourceBundle bundle =
+				(PropertyResourceBundle) PropertyResourceBundle.getBundle(
+					"launcher");
+					
+			for (Enumeration e = bundle.getKeys(); e.hasMoreElements();) {
+				String key = (String) e.nextElement();
+				props.setProperty(key.toLowerCase(), bundle.getString(key));
+			}
+			
+		} catch (MissingResourceException e){
+			//run in default mode
+			Logger.global.info("Could not find launcher.properties.  Running default configuration");
+			
+			props.setProperty("splashmode", "html");
+			props.setProperty("splashpage", "splash.html");
+			props.setProperty("splashtime", "5s");
+			props.setProperty("runmode",    "serial");
+			props.setProperty("log",        "info");
+			props.setProperty("border",     "red");
+			props.setProperty("background", "white");
+			props.setProperty("foreground", "black");
+			
+		}
+		
+		setProperties(props);
+	}
+	
+	private void setProperties(Properties properties){
+		this.properties = properties;
+	}
+	
+	private Properties getProperties(){
+		return properties;
+	}
+	
+	/**
+	 * Get the Launcher Properties
+	 * @@param key
+	 * @@return
+	 */
+	protected String getProperty(String key){
+		String value;
+		Properties props;
+		
+		value = new String();
+		props = getProperties();
+		
+		if(props != null && key != null){
+			value = props.getProperty(key);
+		}
+		
+		return value;
+	}
+	
+	/**
+	 * Check the splash mode.
+	 * @@param checkVal
+	 * @@return
+	 */
+	protected boolean splashModeIs(String checkVal){
+		String  propKey;
+		
+		propKey = SPLASHMODE;
+		
+		return checkIsEqual(propKey, checkVal);
+	}
+	
+	/**
+	 * Check for the runmode
+	 * @@param checkVal
+	 * @@return
+	 */
+	protected boolean runModeIs(String checkVal){
+		String  propKey;
+		
+		propKey	= RUNMODE;
+		
+		return checkIsEqual(propKey, checkVal);
+	}
+	
+	private boolean checkIsEqual(String propKey, String checkVal){
+		boolean result;
+		String  propVal;
+
+		result  = false;
+		propKey = SPLASHMODE;
+
+		if(checkVal != null){
+			propVal = getProperty(propKey);
+	
+			if(propVal != null && propVal.equalsIgnoreCase(checkVal)){
+				result = true;
+			}
+		}
+
+		return result;
+	}
+	
+	/**
+	 * Get the splashpage property
+	 * @@return
+	 */
+	protected String getSplashPage(){
+		return getProperty(SPLASHPAGE);
+	}
+	
+	/**
+	 * Get the Length of the splashpage minimun display time.  If no valid display
+	 * time is found, the default value of 10seconds is set.
+	 * @@return
+	 */
+	private String S  = "s";
+	private String MS = "ms";
+	protected long getDisplayTime(){
+		long displayTime;
+		String time;
+		
+		displayTime = 10000;
+		time        = getProperty(SPLASHTIME);		
+		
+		if(time.toLowerCase().endsWith(MS)){
+			displayTime = Long.parseLong(time.substring(0, time.length() - MS.length()));
+			
+		} else if(time.toLowerCase().endsWith(S)){
+			displayTime = Long.parseLong(time.substring(0, time.length() - S.length()));
+			displayTime = displayTime * 1000; //convert to milliseconds
+		}
+		
+		return displayTime;
+	}
+
+	/**
+	 * @@return
+	 */
+	public Level getLogLevel() {
+		String userLevel;
+		Level  level;
+		
+		userLevel = getProperty(LOG);		
+		level     = Level.parse(userLevel.toUpperCase());
+		
+		return level;
+	}
+	
+	public Color getBorder(){
+		return getColor(BORDER);
+	}
+	
+	public Color getBackground(){
+		return getColor(BACKGROUND);
+	}
+	
+	public Color getForeground(){
+		return getColor(FOREGROUND);
+	}
+	
+	private Color getColor(String propertyName){
+		String userColor;
+		Color  result;
+		
+		userColor = getProperty(propertyName);		
+		result    = Color.getColor(userColor.toUpperCase());
+		
+		Logger.global.info(propertyName + " " + userColor);
+		
+		if(result == null){
+			result = parseColor(userColor);
+		}
+		
+		return result;
+		
+	}
+	
+	private Color parseColor(String color){
+		if(color.toUpperCase().equals("RED")){
+			return Color.RED;
+		} else if(color.toUpperCase().equals("BLUE")){
+			return Color.BLUE;
+		} else if(color.toUpperCase().equals("GREEN")){
+			return Color.GREEN;
+		} else if(color.toUpperCase().equals("YELLOW")){
+			return Color.YELLOW;
+		} else if(color.toUpperCase().equals("GRAY")){
+			return Color.GRAY;				
+		} else if(color.toUpperCase().equals("LIGHT_GRAY")){
+			return Color.LIGHT_GRAY;
+		} else if(color.toUpperCase().equals("BLACK")){
+			return Color.BLACK;
+		} else if(color.toUpperCase().equals("WHITE")){
+			return Color.WHITE;			
+		} else {
+			return Color.decode(color);
+		}
+	}
+}@

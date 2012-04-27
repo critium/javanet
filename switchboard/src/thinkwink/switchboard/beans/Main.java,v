@@ -1,0 +1,30 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.02.03.16.26.20;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@package thinkwink.switchboard.beans;
+
+public class Main {
+	public String get(String key){
+		return key;
+	}
+}
+@

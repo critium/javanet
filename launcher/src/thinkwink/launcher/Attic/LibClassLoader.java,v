@@ -1,0 +1,89 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2009.07.02.22.02.09;	author fdlcruz;	state dead;
+branches;
+next	1.1;
+
+1.1
+date	2005.02.24.02.44.48;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@Issue number: NONE
+Obtained from: NONE
+Submitted by:  NONE
+Reviewed by:  NONE
+@
+text
+@/*
+ * Created on Nov 11, 2004
+ *
+ * To change the template for this generated file go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ */
+package thinkwink.launcher;
+
+import java.net.URL;
+import java.net.URLClassLoader;
+
+/**
+ * @@author Pule
+ *
+ * To change the template for this generated type comment go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ */
+public class LibClassLoader extends URLClassLoader {
+
+	/**
+	 * @@param arg0
+	 * @@param arg1
+	 */
+	public LibClassLoader(URL[] arg0) {
+		super(arg0);
+	}
+	
+	public String toString(){
+		return "LibClassLoader";
+	}
+}
+@
+
+
+1.1
+log
+@Issue number:
+Obtained from:
+Submitted by:  fdlcruz
+Reviewed by:
+CVS: ----------------------------------------------------------------------
+CVS: Issue number:
+CVS:   If this change addresses one or more issues,
+CVS:   then enter the issue number(s) here.
+CVS: Obtained from:
+CVS:   If this change has been taken from another system,
+CVS:   then name the system in this line, otherwise delete it.
+CVS: Submitted by:
+CVS:   If this code has been contributed to the project by someone else; i.e.,
+CVS:   they sent us a patch or a set of diffs, then include their name/email
+CVS:   address here. If this is your work then delete this line.
+CVS: Reviewed by:
+CVS:   If we are doing pre-commit code reviews and someone else has
+CVS:   reviewed your changes, include their name(s) here.
+CVS:   If you have not had it reviewed then delete this line.
+@
+text
+@@
+

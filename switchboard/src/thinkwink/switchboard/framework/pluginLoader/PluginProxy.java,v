@@ -1,0 +1,189 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.08.04.19.06.12;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.framework.pluginLoader;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.ByteBuffer;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import sun.security.provider.MD5;
+import thinkwink.switchboard.framework.factories.ControllerFactory;
+
+public class PluginProxy {
+	public static Log log = LogFactory.getLog(PluginProxy.class);
+	
+	private String     className;
+	private File       file;
+	private byte[]     hash;
+	private ByteBuffer classBytes;
+	private int        classLength;
+	private char       DOT = '.';
+	private Class      proxyClass;
+	private URL        url;
+	
+	public PluginProxy (File f, String basePath){
+		setFile(f);
+		setHash();
+		setClassName(basePath);
+		setClassDetails();
+		setURL();
+		
+		log.debug("CREATING NEW PLUGIN PROXY: " + f.toString() + " " + className);
+	}
+	
+	private void setURL() {
+		try {
+			url = getFile().toURL();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public File getFile(){
+		return file;
+	}
+	
+	private byte[] calculateHash(){
+		MessageDigest md;
+		byte[]        hash;
+		
+		hash = null;
+		
+		try {
+			md = MessageDigest.getInstance("MD5");
+			
+			FileInputStream fis = new FileInputStream(getFile());
+
+			for(byte b; ((b = (byte) fis.read()) != -1); ) {
+				md.update(b);
+			}
+			
+			hash = md.digest();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return hash;
+	}
+	
+	private byte[] getHash(){
+		if(hash == null){
+			return calculateHash();
+		}
+		
+		return hash;
+	}
+	
+	public String getClassName(){
+		return className;
+	}
+	
+	private String translate(String origPath){
+		String   result;
+		
+		result = origPath.replace(File.separatorChar, DOT);
+		result = result.split(".class")[0];
+		result = result.substring(1);
+		
+		return result;
+	}
+
+	public boolean checkForNew() {
+		byte[] nByte;
+		
+		nByte = calculateHash();
+		
+		return MessageDigest.isEqual(nByte, hash);
+	}
+
+	public ByteBuffer getClassBytes() {
+		return classBytes;
+	}
+
+	public void setClassDetails() {
+		classLength = (int) getFile().length();
+		classBytes  = ByteBuffer.allocate(classLength);
+		
+		try {
+			FileInputStream fis = new FileInputStream(getFile());
+
+			for(byte b; ((b = (byte) fis.read()) != -1); ) {
+				classBytes.put(b);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public int getClassLength() {
+		return classLength;
+	}
+
+	public void setClassLength(int classLength) {
+		this.classLength = classLength;
+	}
+
+	public void setClassName(String basePath) {
+		File   file = getFile();
+		String path = file.getPath();
+		
+		path = path.substring(basePath.length());
+		
+		this.className = translate(path);
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public void setHash() {
+		hash = calculateHash();
+	}
+
+	public void setProxyClass(Class c) {
+		this. proxyClass = c;
+	}
+
+	public Class getProxyClass() {
+		return proxyClass;
+	}
+
+	public URL getURL() {
+		return url;
+	}
+}
+@

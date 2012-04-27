@@ -1,0 +1,40 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.08.04.19.06.17;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@This is a working copy.  Enjoy!
+@
+text
+@#HSQL Database Engine
+#Fri Jan 06 17:05:59 EST 2006
+hsqldb.script_format=0
+runtime.gc_interval=0
+sql.enforce_strict_size=false
+hsqldb.cache_size_scale=8
+readonly=false
+hsqldb.nio_data_file=true
+hsqldb.cache_scale=14
+version=1.8.0
+hsqldb.default_table_type=memory
+hsqldb.cache_file_scale=1
+hsqldb.log_size=200
+modified=yes
+hsqldb.cache_version=1.7.0
+hsqldb.original_version=1.8.0
+hsqldb.compatible_version=1.8.0
+@

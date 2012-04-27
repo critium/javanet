@@ -1,0 +1,114 @@
+head	1.3;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.3
+date	2005.02.24.04.01.18;	author fdlcruz;	state Exp;
+branches;
+next	1.2;
+
+1.2
+date	2005.02.24.03.58.58;	author fdlcruz;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2004.08.24.16.02.11;	author httpd;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.3
+log
+@Issue number:
+Obtained from:
+Submitted by:  fdlcruz
+Reviewed by:
+CVS: ----------------------------------------------------------------------
+CVS: Issue number:
+CVS:   If this change addresses one or more issues,
+CVS:   then enter the issue number(s) here.
+CVS: Obtained from:
+CVS:   If this change has been taken from another system,
+CVS:   then name the system in this line, otherwise delete it.
+CVS: Submitted by:
+CVS:   If this code has been contributed to the project by someone else; i.e.,
+CVS:   they sent us a patch or a set of diffs, then include their name/email
+CVS:   address here. If this is your work then delete this line.
+CVS: Reviewed by:
+CVS:   If we are doing pre-commit code reviews and someone else has
+CVS:   reviewed your changes, include their name(s) here.
+CVS:   If you have not had it reviewed then delete this line.
+@
+text
+@<html>
+  <head>
+    <title>Thinkwink Launcher Project</title>
+  </head>
+  <body>
+    <p>The Launcher project is aimed squarely at all java users.  To the typical user, you can use this
+    project to clean up your startup code.  No more worrying about classpaths, just stick them in the lib
+    directory.  No more worrying about writing splash screens.  Just write an html one or create an image
+    and stick em in the splash directory.  Just edit the launcher.properties file and you're ready to go.
+    You dont even need to memori.ze XML.  Just set it and forget it!
+	
+	<p>And dont forget your java beginners.  What better way to start programming java without the classpath
+	frustration!  This will make it much easier on the beginner to focus on the "code" aspect of java
+	programming.
+  </body>
+</html>
+@
+
+
+1.2
+log
+@Issue number:
+Obtained from:
+Submitted by:  fdlcruz
+Reviewed by:
+CVS: ----------------------------------------------------------------------
+CVS: Issue number:
+CVS:   If this change addresses one or more issues,
+CVS:   then enter the issue number(s) here.
+CVS: Obtained from:
+CVS:   If this change has been taken from another system,
+CVS:   then name the system in this line, otherwise delete it.
+CVS: Submitted by:
+CVS:   If this code has been contributed to the project by someone else; i.e.,
+CVS:   they sent us a patch or a set of diffs, then include their name/email
+CVS:   address here. If this is your work then delete this line.
+CVS: Reviewed by:
+CVS:   If we are doing pre-commit code reviews and someone else has
+CVS:   reviewed your changes, include their name(s) here.
+CVS:   If you have not had it reviewed then delete this line.
+@
+text
+@d6 1
+a6 1
+    The Launcher project is aimed squarely at all java users.  To the typical user, you can use this
+d10 5
+a14 1
+    You dont even need to memorize XML.  Just set it and forget it!
+@
+
+
+1.1
+log
+@Initial data for the launcher project
+@
+text
+@d3 1
+a3 1
+    <title>Default Project Content</title>
+d6 5
+a10 1
+    This is the default project content.
+@
+

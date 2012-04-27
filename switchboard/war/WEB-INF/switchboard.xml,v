@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.02.03.17.00.33;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@<switchboard>
+	<page>
+		<name>Test</name>
+		<success order="1">./jsp/Test2.jsp</success>
+</switchboard>@

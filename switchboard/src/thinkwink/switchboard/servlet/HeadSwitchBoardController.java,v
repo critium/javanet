@@ -1,0 +1,125 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2006.08.04.19.06.18;	author fdlcruz;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2006.02.03.16.26.17;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.servlet;
+
+import static thinkwink.switchboard.util.StaticKeys.*;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import thinkwink.switchboard.framework.factories.BeanFactory;
+import thinkwink.switchboard.framework.factories.ControllerFactory;
+import thinkwink.switchboard.framework.factories.FormFactory;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardBean;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardController;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardForm;
+
+public class HeadSwitchBoardController extends HttpServlet {
+	public static Log log = LogFactory.getLog(HeadSwitchBoardController.class);
+	
+	/**
+	 * Set a default serial version uid
+	 */
+	private static final long serialVersionUID = 1L;
+
+	static {
+		StartupClass.performStartup();
+	}
+	
+	/**
+	 * Send all gets to the post
+	 */
+	public void doGet(HttpServletRequest request, HttpServletResponse response){
+		doPost(request, response);
+	}
+	
+	/**
+	 * Process the request
+	 */
+	public void doPost(HttpServletRequest request, HttpServletResponse response){
+		RequestDispatcher     rd;
+		SwitchBoardBean       swb;
+		SwitchBoardForm       swf;
+		SwitchBoardController swc;
+		
+		swf = FormFactory.get(request);
+		swb = BeanFactory.get(request, swf);
+		swc = ControllerFactory.get(request, response, swf, swb);
+		
+		log.debug(swf);
+		log.debug(swb);
+		log.debug(swc);
+		
+		if(swb.hasNextPage()){
+			setBean(swb, request);
+			
+			rd = request.getRequestDispatcher(swb.getNextPage());		
+			try {
+				rd.forward(request, response);
+				
+			} catch (ServletException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * is this enough?  What if user overrides the toString?
+	 * @@param swb
+	 * @@param request
+	 */
+	private void setBean(SwitchBoardBean swb, HttpServletRequest request) {
+		//BeanFactory.set(swb.toString(), swb);
+		
+		request.setAttribute(BEAN_KEY, swb);
+	}
+}
+@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@d13 3
+d24 2
+d31 4
+d54 4
+@
+

@@ -1,0 +1,36 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.08.04.19.06.13;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@This is a working copy.  Enjoy!
+@
+text
+@# Ant properties for building the springapp
+user.home=c:/documents and settings/All Users/Documents/Dev
+appserver.home=${user.home}/jakarta-tomcat-5.0.28
+deploy.path=${appserver.home}/webapps
+
+tomcat.manager.url=http://localhost:8080/manager
+tomcat.manager.username=admin
+tomcat.manager.password=tomcat
+
+db.driver=org.hsqldb.jdbcDriver
+db.url=jdbc:hsqldb:db/test
+db.user=sa
+db.pw=
+@

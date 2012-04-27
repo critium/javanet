@@ -1,0 +1,75 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2006.08.04.19.06.14;	author fdlcruz;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2006.02.03.17.00.33;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@This is a working copy.  Enjoy!
+@
+text
+@<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>SwitchBoard</short-name>
+
+	<tag>
+
+		<name>get</name>
+		<tag-class>thinkwink.switchboard.taglib.GetTag</tag-class>
+		<body-content>JSP</body-content>
+
+		<description>
+			Returns the value of the Variable
+		</description>
+
+		<attribute>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+	</tag>
+	
+	<tag>
+		<name>loadContext</name>
+		<tag-class>thinkwink.switchboard.taglib.LoadContextTag</tag-class>
+		<body-content>JSP</body-content>
+
+		<description>
+			Loads the requests onto the page context
+		</description>
+	</tag>
+
+</taglib>
+@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@d5 4
+@
+

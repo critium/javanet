@@ -1,0 +1,65 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2006.08.04.19.06.15;	author fdlcruz;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2006.02.03.16.26.17;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.framework.impl;
+
+import java.util.Enumeration;
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+
+import thinkwink.switchboard.framework.ifaces.SwitchBoardForm;
+import thinkwink.switchboard.util.KVPair;
+
+public class DefaultSwitchBoardForm extends SwitchBoardForm {
+	/**
+	 * Default value
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private KVPair kvPair;
+	
+	public void init(HttpServletRequest request){
+		kvPair = new KVPair(request);
+	}
+}
+@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@d11 1
+a11 1
+public class DefaultSwitchBoardForm implements SwitchBoardForm {
+d19 1
+a19 1
+	public DefaultSwitchBoardForm(HttpServletRequest request){
+@
+

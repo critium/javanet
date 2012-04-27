@@ -1,0 +1,99 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2006.08.04.19.06.18;	author fdlcruz;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2006.02.03.16.26.14;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.framework.factories;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import thinkwink.switchboard.framework.ifaces.SwitchBoardBean;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardController;
+import thinkwink.switchboard.framework.ifaces.SwitchBoardForm;
+import thinkwink.switchboard.framework.impl.DefaultSwitchBoardBean;
+import thinkwink.switchboard.framework.impl.DefaultSwitchBoardController;
+import thinkwink.switchboard.framework.pluginLoader.SBPluginLoader;
+
+public class BeanFactory {
+	public static Log log = LogFactory.getLog(BeanFactory.class);
+	
+	public static SwitchBoardBean get(HttpServletRequest request, SwitchBoardForm swf) {
+		SwitchBoardBean sbb;
+		
+		String pathInfo = request.getPathInfo();
+		
+		sbb = get(pathInfo);
+		
+		if(sbb==null){
+			sbb = new DefaultSwitchBoardBean();
+		}
+		
+		sbb.init(request, swf);
+		
+		return sbb;
+	}
+	
+	public static SwitchBoardBean get(String name) {
+		log.debug(name + "Bean");
+		
+		if(name.startsWith("/")){
+			name = name.substring(1);
+		}
+		
+		return SBPluginLoader.getInstance().loadBean(name + "Bean");
+	}
+}
+@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@d3 3
+d8 3
+d12 1
+d15 2
+d19 2
+d22 17
+a38 1
+		//Find the right bean...unless none found.
+d40 3
+a42 3
+//		if(request.getPathInfo().endsWith("index")){
+//			return new IndexBean(request, swf);
+//		}
+d44 1
+a44 1
+		return new DefaultSwitchBoardBean(request, swf);
+@
+

@@ -1,0 +1,31 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2009.07.02.22.02.09;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Issue number: NONE
+Obtained from: NONE
+Submitted by:  NONE
+Reviewed by:  NONE
+@
+text
+@package thinkwink.launcher;
+
+public interface ProgressMediatorIface {
+    public void setText(String text);
+}
+@

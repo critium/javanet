@@ -1,0 +1,41 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.08.04.19.06.16;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.sample.form;
+
+import javax.servlet.http.HttpServletRequest;
+
+import thinkwink.switchboard.framework.ifaces.SwitchBoardForm;
+
+public class IndexForm extends SwitchBoardForm {
+	
+	
+	public String toString(){
+		return "Index Form 0";
+	}
+
+	public void init(HttpServletRequest request) {
+		// TODO Auto-generated method stub
+		
+	}
+}
+@

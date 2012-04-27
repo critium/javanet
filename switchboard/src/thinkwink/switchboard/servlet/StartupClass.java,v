@@ -1,0 +1,48 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.08.04.19.06.18;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.servlet;
+
+import java.net.MalformedURLException;
+
+import thinkwink.switchboard.framework.factories.BeanFactory;
+import thinkwink.switchboard.framework.factories.ControllerFactory;
+import thinkwink.switchboard.framework.factories.FormFactory;
+import thinkwink.switchboard.framework.pluginLoader.SBPluginLoader;
+
+public class StartupClass {
+	public static void main(String[] args){
+		performStartup();
+		performTest();
+	}
+	
+	protected static void performStartup(){
+		SBPluginLoader.getInstance();
+	}
+	
+	protected static void performTest(){	
+		BeanFactory.get("Index");
+		ControllerFactory.get("Index");
+		FormFactory.get("Index");
+	}
+}
+@

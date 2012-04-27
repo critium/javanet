@@ -1,0 +1,119 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2009.07.02.22.02.09;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Issue number: NONE
+Obtained from: NONE
+Submitted by:  NONE
+Reviewed by:  NONE
+@
+text
+@/*
+ * Created on Nov 11, 2004
+ *
+ * To change the template for this generated file go to
+ * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ */
+package thinkwink.launcher;
+
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @@author Pule
+ *
+ */
+public final class FilterClassLoader extends URLClassLoader {
+    List<String> restrictedPackages;
+    List<String> allowedClasses;
+    List<String> restrictedClasses;
+
+    public FilterClassLoader(
+            URL[] arg0,
+            List<String> restrictedPackages,
+            List<String> allowedClasses,
+            List<String> restrictedClasses) {
+        super(arg0, ClassLoader.getSystemClassLoader());
+
+        this.restrictedPackages = restrictedPackages;
+        this.allowedClasses = allowedClasses;
+        this.restrictedClasses = restrictedClasses;
+    }
+
+    public String toString(){
+        return "FilterClassLoader";
+    }
+
+    public URL getResource(String resourceName){
+        System.out.println("Attempting to find: " + resourceName);
+
+        URL  myURL;
+        myURL = super.getResource(resourceName);
+
+        return myURL;
+    }
+
+    public Class loadClass(String className) throws ClassNotFoundException {
+        return findClass(className);
+   }
+
+    public Class findClass(String className) throws ClassNotFoundException {
+       byte classByte[];
+       Class result=null;
+
+
+
+       //allowed classes overrides restricted packages
+       if(allowedClasses.contains(className)){
+           return localload(className);
+       }
+
+       //allowed classes overrides restricted packages
+       if(restrictedClasses.contains(className)){
+           throw new ClassNotFoundException("Class " + className + " could not be found");
+       }
+
+       // check the restricted packages to reject if necessary
+       for(String pkg: restrictedPackages){
+           if(className.startsWith(pkg)){
+               // do not give the user any ideas on what is happening
+               throw new ClassNotFoundException("Class " + className + " could not be found");
+           }
+       }
+
+       return localload(className);
+    }
+
+    private Class localload(String className) throws ClassNotFoundException {
+        Class result = null;
+
+        try {
+            return super.loadClass(className);
+        } catch (ClassNotFoundException cnfe){
+            // Not in URL Class loader.  Check system class loader
+            try {
+                return findSystemClass(className);
+            } catch (ClassNotFoundException e) {
+                throw new ClassNotFoundException(className, e);
+            }
+        }
+    }
+}
+@

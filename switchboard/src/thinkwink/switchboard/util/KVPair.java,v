@@ -1,0 +1,51 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.02.03.16.26.20;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@package thinkwink.switchboard.util;
+
+import java.util.Enumeration;
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+
+public class KVPair extends HashMap <String, String[]> {
+	/**
+	 * Default serial value.
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	public KVPair(HttpServletRequest request){
+		Enumeration enums;
+		String      tempKey;
+		String[]    tempVal;
+		
+		enums = request.getParameterNames();
+		
+		while(enums.hasMoreElements()){
+			tempKey = (String) enums.nextElement();
+			tempVal = request.getParameterValues(tempKey);
+			
+			put(tempKey, tempVal);
+		}
+	}
+}
+@

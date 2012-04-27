@@ -1,0 +1,250 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.08.04.19.06.12;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@This is a working copy.  Enjoy!
+@
+text
+@package thinkwink.switchboard.framework.pluginLoader;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import thinkwink.switchboard.framework.factories.ControllerFactory;
+
+public class SWClassLoader extends URLClassLoader{
+	public static Log log = LogFactory.getLog(SWClassLoader.class);
+	public static final String IGNORE_PATH = "thinkwink.switchboard.framework";
+	
+	private String basePath;
+	
+    private PluginProxyManager ppManager = new PluginProxyManager();
+    
+    private void addURLtoClassLoader(File f) throws MalformedURLException {
+		File[] fs;
+		String fileName;
+		URL    lastURL;
+		
+		lastURL = null;
+		fs      = f.listFiles();
+		
+		for(int i=0; i<fs.length; i++){
+			
+			fileName = fs[i].getName();
+						
+			//if class add class?
+			if(fileName.toLowerCase().endsWith(".class")){
+				PluginProxy pp = new PluginProxy(fs[i], basePath);
+				
+				ppManager.put(pp);
+				
+				//if(lastURL == null || !lastURL.equals(fs[i].getParentFile().toURL())){
+					//lastURL = fs[i].getParentFile().toURL();
+					//addURL(fs[i].getParentFile().toURL());
+				//}
+				
+				addURL(pp.getURL());
+				
+				if(fileName.startsWith("SwitchBoardBean")){
+					try {
+						loadClass("thinkwink.switchboard.framework.ifaces.SwitchBoardBean");
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				if(fileName.startsWith("SwitchBoardController")){
+					try {
+						loadClass("thinkwink.switchboard.framework.ifaces.SwitchBoardController");
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				if(fileName.startsWith("SwitchBoardForm")){
+					try {
+						loadClass("thinkwink.switchboard.framework.ifaces.SwitchBoardForm");
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			if(fs[i].isDirectory()){
+				if(isIgnore(fs[i].getPath())){
+					log.debug("IGNORING: " + fs[i].getPath());
+				} else {
+					addURLtoClassLoader(fs[i]);	
+				}
+			}
+		}
+	}
+    
+    /**
+     * CHeck for occurance of thinking.switchboard.framework
+     * @@param path
+     * @@return
+     */
+    private boolean isIgnore(String path){
+    	String[] pArr = path.split("\\" + File.separatorChar);
+    	String[] iArr = IGNORE_PATH.split("\\.");
+    	
+    	if(pArr.length < iArr.length) return false;
+    	
+    	if(iArr[0].equals(pArr[pArr.length - 3]) 
+    			&& iArr[1].equals(pArr[pArr.length-2]) 
+    			&& iArr[2].equals(pArr[pArr.length-1])){
+    		return true;
+    	}
+    	
+    	return false;
+    }
+
+    public SWClassLoader(URL[] urls, ClassLoader cl) throws MalformedURLException {
+        super(urls, cl);
+        
+        log.debug(urls[0].getFile());
+        setBasePath(urls[0]);
+        
+        addURLtoClassLoader(new File(urls[0].getFile()));
+    }
+    
+    private void setBasePath(URL url) {
+		basePath = url.getFile();
+	}
+
+	protected boolean hasNewHash(String name){
+    	PluginProxyManager ppManager;
+    	PluginProxy        pp;
+    	
+    	ppManager = getPPManager();
+    	
+    	pp = ppManager.get(name);
+    	
+    	if(pp != null){
+    		return pp.checkForNew();
+    	}
+    	
+    	return false;
+    }
+    
+    private PluginProxy getPP(String name){
+    	PluginProxyManager ppManager;
+    	PluginProxy        pp;
+    	
+    	ppManager = getPPManager();
+    	
+    	pp = ppManager.get(name);
+    	
+    	if(pp == null){
+    		Set <String> keys = ppManager.keySet();
+    		
+    		for(String key: keys){
+    			if(key.endsWith(name)){
+    				return ppManager.get(key);
+    			}
+    		}
+    	}
+    	
+    	return pp;
+    }
+    
+    private PluginProxyManager getPPManager(){
+    	return ppManager;
+    }
+    
+    protected Class findClass(String name) throws ClassNotFoundException{
+        Class c = super.findClass(name);
+        
+        return c;
+    }
+    
+    public Class loadClass(String name) throws ClassNotFoundException{
+        return loadClass(name, false);
+    }
+    
+    private Class loadClass(PluginProxy pp){
+    	Class c = null;
+    	
+    	if(hasNewHash(pp.getClassName())){
+    		log.debug("CN: " + pp.getClassName());
+
+    		c = defineClass(pp.getClassName(), pp.getClassBytes().array(), 0, pp.getClassLength());
+    			
+    		pp.setProxyClass(c);
+    	} else {
+    		c = pp.getProxyClass();
+    	}
+    	
+    	if(c != null){
+    		resolveClass(c);
+    	}
+    	
+    	return c;
+    }
+    
+    protected Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
+    	PluginProxy pp;
+    	Class       c;
+    	
+    	pp = getPP(name);
+    	c  = null;
+    	
+    	if(pp!= null){
+    		c = loadClass(pp);  
+    	}
+    	
+    	if (c == null){
+    		c = findLoadedClass(name);
+    	}
+        
+        if(c == null) {
+            try {
+                c = findClass(name);
+
+            } catch (ClassNotFoundException cnfe) {
+            }
+        }
+        
+        if(c == null){
+            if(getParent() != null) {
+                c = getParent().loadClass(name);
+            } else {
+                c = getSystemClassLoader().loadClass(name);
+            }
+        }
+        
+        if(resolve){
+            resolveClass(c);
+        }
+        
+        return c;
+    }
+    
+}
+@

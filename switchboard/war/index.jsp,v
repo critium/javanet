@@ -1,0 +1,69 @@
+head	1.2;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.2
+date	2006.08.04.19.06.15;	author fdlcruz;	state Exp;
+branches;
+next	1.1;
+
+1.1
+date	2006.02.03.17.00.35;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.2
+log
+@This is a working copy.  Enjoy!
+@
+text
+@<%@@ include file="/WEB-INF/jsp/include.jsp" %>
+
+<html>
+<head><title><fmt:message key="title"/></title></head>
+<body>
+<h1><fmt:message key="heading"/></h1>
+<p><fmt:message key="greeting"/>
+</p>
+<h3>Products</h3>
+
+
+<br>
+<form method=post action="/switchboard/swb/Index">
+	<input type="text" name="one">
+	<input type="text" name="two">	
+	<input type="submit">
+</form>
+
+<form method=post action="/switchboard/swb/Default">
+	<input type="text" name="one">
+	<input type="text" name="two">	
+	<input type="submit">
+</form>
+
+<br>
+</body>
+</html>@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@d13 1
+a13 1
+<form method=post action="/switchboard/swb/index">
+d19 1
+a19 1
+<form method=post action="/switchboard/swb/default">
+@
+

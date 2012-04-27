@@ -1,0 +1,269 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2005.02.24.02.44.48;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Issue number:
+Obtained from:
+Submitted by:  fdlcruz
+Reviewed by:
+CVS: ----------------------------------------------------------------------
+CVS: Issue number:
+CVS:   If this change addresses one or more issues,
+CVS:   then enter the issue number(s) here.
+CVS: Obtained from:
+CVS:   If this change has been taken from another system,
+CVS:   then name the system in this line, otherwise delete it.
+CVS: Submitted by:
+CVS:   If this code has been contributed to the project by someone else; i.e.,
+CVS:   they sent us a patch or a set of diffs, then include their name/email
+CVS:   address here. If this is your work then delete this line.
+CVS: Reviewed by:
+CVS:   If we are doing pre-commit code reviews and someone else has
+CVS:   reviewed your changes, include their name(s) here.
+CVS:   If you have not had it reviewed then delete this line.
+@
+text
+@package thinkwink.launcher;
+
+import java.awt.Dimension;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Logger;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class Splash extends JFrame implements WindowListener, Runnable {
+	
+	private LauncherProperties launcherProperties;
+	private int height = -1;
+	private int width  = -1;
+
+	public static void main (String[] args){
+		Splash splash;
+		
+		splash = new Splash(new ProgressMediator(null), null);
+	}
+	
+	public Splash(ProgressMediator progressMediator, LauncherProperties props){
+		SplashPanel  splashPanel;		
+		JPanel       rootPanel;
+		JPanel       bottomPanel;		
+		ImageIcon    image;
+		JEditorPane  htmlSplashPane;
+				
+		launcherProperties = props;
+		splashPanel        = new SplashPanel();
+		rootPanel          = new JPanel();
+		bottomPanel        = new JPanel();	
+		
+		bottomPanel.setLayout(new GridLayout(2,1));
+		bottomPanel.setOpaque(true);
+		
+		bottomPanel.add(progressMediator.getProgressBar());
+		bottomPanel.add(progressMediator.getTextField());
+		
+		splashPanel.setLayout(new BorderLayout());		
+		
+		//check ths splashmode
+		if(props.splashModeIs(props.IMG)){
+			//display the img splash mode
+			image = loadImage(props.getSplashPage());
+			splashPanel.setImage(image);	
+			
+		} else if (props.splashModeIs(props.HTML)) {
+			//display the html splash mode			
+			try {
+				htmlSplashPane = new JEditorPane(loadHtml(props.getSplashPage()));
+				splashPanel.add(htmlSplashPane, BorderLayout.CENTER);
+				
+			} catch (IOException e) {				
+				e.printStackTrace();
+				
+			}
+		}
+
+		rootPanel.setLayout(new BorderLayout());
+		rootPanel.add(splashPanel, BorderLayout.CENTER);
+		rootPanel.add(bottomPanel, BorderLayout.SOUTH);
+		rootPanel.setBorder(BorderFactory.createLineBorder(props.getBorder()));
+		
+		//Set the splashpage frame properties
+		getContentPane().add(rootPanel);
+		
+		//setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		addWindowListener(this);
+		setResizable(false);
+		setUndecorated(true);	
+		setSize();
+		center();
+		toFront();		
+		show();
+	}
+	
+	/**
+	 * Load the html splash page
+	 * @@param splashPage
+	 * @@return
+	 */
+	private URL loadHtml(String splashPage){
+		File file;
+		URL  url;
+		
+		file = new File("splash/" + splashPage);
+		url  = null;
+		
+		try {
+			url = file.toURL();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return url;
+	}
+	
+	/**
+	 * Load the image splash page
+	 * @@param splashPage
+	 * @@return
+	 */
+	private ImageIcon loadImage(String splashPage) {
+		ImageIcon image;
+		
+		image = new ImageIcon( "splash/" + splashPage );
+		
+		setHeight(image.getIconHeight());
+		setWidth(image.getIconWidth());
+		
+		return image;
+	}
+	
+	private void setHeight(int height){
+		this.height = height;
+	}
+	
+	private void setWidth(int width){
+		this.width = width;
+	}
+	
+	public int getHeight(){
+		if(height == -1){
+			height = 300;
+		}
+		
+		return height;
+	}
+	
+	public int getWidth(){
+		if(width == -1){
+			width = 500;
+		}
+		
+		return width;
+	}
+	
+	private void setSize(){
+		int height;
+		int width;
+		
+		height = getHeight();
+		width  = getWidth();			
+				
+		setSize(height, width);
+	}
+	
+	private void center(){
+		int height;
+		int width;
+		
+		height = getHeight();
+		width  = getWidth();
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setBounds((screenSize.width-width)/2,
+				  (screenSize.height-height)/2,
+				  width,
+				  height);
+	}
+	
+	/**
+	 * The finalize method will cause the splash page to exit after set number of seconds.
+	 */
+	public void finalize(){
+		Thread t = new Thread(this);
+		
+		t.start();
+	}
+
+	/** (non-Javadoc)
+	 * @@see java.lang.Runnable#run()
+	 */
+	public void run() {
+		long displayTime;
+		
+		displayTime = launcherProperties.getDisplayTime();
+		
+		try {		
+			Logger.global.fine("Displaying Splash for: " + displayTime);
+			Thread.sleep(displayTime);
+			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.dispose();
+	}
+
+	public void windowOpened(WindowEvent arg0) {
+	}
+
+	public void windowClosing(WindowEvent arg0) {
+	}
+
+	public void windowClosed(WindowEvent arg0) {
+	}
+
+	public void windowIconified(WindowEvent arg0) {
+	}
+
+	public void windowDeiconified(WindowEvent arg0) {
+	}
+
+	public void windowActivated(WindowEvent arg0) {
+	}
+
+	public void windowDeactivated(WindowEvent arg0) {
+		//keep the splashpage at the front
+		this.toFront();
+	}
+}@

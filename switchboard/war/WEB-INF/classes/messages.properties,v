@@ -1,0 +1,32 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.08.04.19.06.13;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@This is a working copy.  Enjoy!
+@
+text
+@title=SwitchBoard
+heading=Hello :: SwitchBoard
+greeting=Greetings, it is now
+priceincrease.heading=Price Increase :: SwitchBoard
+error.not-specified=Percentage not specified!!!
+error.too-low=You have to specify a percentage higher than {0}!
+error.too-high=Don't be greedy - you can't raise prices by more than {0}%!
+required=Entry required.
+typeMismatch=Invalid data.
+typeMismatch.percentage=That is not a number!!! @

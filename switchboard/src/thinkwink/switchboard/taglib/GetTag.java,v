@@ -1,0 +1,70 @@
+head	1.1;
+access;
+symbols;
+locks; strict;
+comment	@# @;
+
+
+1.1
+date	2006.02.03.16.26.13;	author fdlcruz;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Initial commit
+@
+text
+@package thinkwink.switchboard.taglib;
+
+import static thinkwink.switchboard.util.StaticKeys.*;
+
+import java.io.IOException;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import thinkwink.switchboard.framework.ifaces.SwitchBoardBean;
+import thinkwink.switchboard.util.KVPair;
+
+public class GetTag extends TagSupport {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String key;
+	
+	public void setKey(String key){
+		this.key = key;
+	}
+	
+	public int doStartTag(){
+		JspWriter out           = pageContext.getOut();
+		ServletRequest request  = pageContext.getRequest();
+		SwitchBoardBean    bean = (SwitchBoardBean) request.getAttribute(BEAN_KEY);
+		KVPair           kvPair = bean.getKvPair();
+		
+		try {
+			//do reflection here on the bean.
+			out.println(kvPair.get(key));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return SKIP_BODY;
+	}
+	
+	public int doEndTag(){
+		return EVAL_PAGE;
+	}
+}
+@
